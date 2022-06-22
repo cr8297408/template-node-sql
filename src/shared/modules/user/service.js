@@ -1,10 +1,16 @@
+const bcrypt = require('bcrypt');
+const fs = require('fs');
+const { Op } = require("sequelize");
 const User = require('./model');
 const db = require('../../../config/connection/connectBD');
 const UserValidation = require('./validation');
-const Pagination = require('../../middlewares/pagination')
-const { Op } = require("sequelize");
-const permissions = require('../../middlewares/permissions')
-const bcrypt = require('bcrypt')
+const Pagination = require('../../middlewares/pagination');
+const {TemplateSign} = require('../../resources/getTemplate');
+const config = require('../../../config/env');
+const permissions = require('../../middlewares/permissions');
+const sendMail = require('../../resources/send-mail');
+const getUser = require('../../middlewares/getUser');
+const s3 = require('../../../config/bucket');
 
 sequelize = db.sequelize;
 
@@ -36,8 +42,7 @@ const UserService = {
    */
   async create(bearerHeader,body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
-      console.log(validatePermission);
+      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
       if (validatePermission) {
         const validate = UserValidation.createUser(body);
         if (validate.error) {
@@ -78,6 +83,16 @@ const UserService = {
           avatarFile: body.avatarFile,
           typeUser: body.typeUser
         });
+
+        let verificateUser = 'https://google.com'
+        let contactLink = config.CONTACT_LINK;
+
+        const emailFrom = config.MAIL_USER;
+        const emailTo = body.email;
+        const subject = 'Registro en Pos API'
+        const textPrincipal = `te has registrado correctamete a conexion Pos, porfavor verifica tu cuenta en el siguiente link...`
+        const html = TemplateSign(textPrincipal, body.username, verificateUser, contactLink)
+        await sendMail('syscomp', emailFrom, emailTo, subject,html)
         return createdUser;
       } 
       return {
@@ -121,7 +136,7 @@ const UserService = {
    */
   async delete(bearerHeader,id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
       if (validatePermission) {
         const validate = await UserValidation.getUser(id)
   
@@ -156,7 +171,7 @@ const UserService = {
 
   async activateUser(bearerHeader,id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
       if (validatePermission) {
         const validate = await UserValidation.getUser(id)
   
@@ -166,7 +181,6 @@ const UserService = {
         const newUser = await User.update(
           {
             isActive: true,
-            verified: true,
           },
           {where: {id}}
         )
@@ -191,7 +205,7 @@ const UserService = {
   async update(bearerHeader,id, body){
     try {
       
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
       if (validatePermission) {
         const validateid = await UserValidation.getUser(id);
         
@@ -246,6 +260,39 @@ const UserService = {
     }
   },
 
+  async putAvatar(bearerHeader, originalname, path){
+    try {
+      const user = await getUser(bearerHeader);
+      if (!user) {
+        throw new Error('token invalido...')
+      }
+      const bodyFile = fs.createReadStream(path);
+      const paramsSnap = {
+          Bucket: config.AWS_BUCKET,
+          Key: originalname,
+          Body: bodyFile,
+          ContentType: 'image/png',
+          ACL: 'public-read',//TODO 😎
+      };
+      s3.upload(paramsSnap, async function (err, data) {
+        if (err) {
+            throw new Error('error in callback',err)
+        }
+        return data
+      });
+      const avatar = `${config.AWS_URL}/${originalname}` 
+      const userModif = await User.update({
+        avatarFile: avatar
+      }, {
+        where: {id:user.id}
+      })
+
+      return userModif
+      
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
 }
 
 module.exports = UserService;
