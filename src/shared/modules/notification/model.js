@@ -35,8 +35,8 @@ const Notification = sequelize.define('Notification', {
   timestamps: true
 })
 
-// User.hasMany(Notification, {
-//   foreignKey: 'userId'
-// });
+User.hasMany(Notification, {
+  foreignKey: 'UserId'
+});
 
 module.exports = Notification;
