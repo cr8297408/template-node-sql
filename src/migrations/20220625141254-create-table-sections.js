@@ -4,7 +4,7 @@ const { DataTypes, UUIDV4 } = require('sequelize')
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('notifications', {
+    await queryInterface.createTable('sections', {
       id: {
         type: DataTypes.STRING,
         defaultValue: UUIDV4,
@@ -18,25 +18,26 @@ module.exports = {
           key: 'id'
         }
       },
-      message: {
+      ip: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      isRead: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      type: {
-        type: DataTypes.ENUM('PERSONAL', 'BY_USER_POSITION', 'BY_TYPE', 'GROUP')
-      },
-      typeNotification: {
+      region: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      icon: {
+      country: {
         type: DataTypes.STRING,
+        allowNull: false,
       },
-      module: DataTypes.STRING,
+      city: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      token: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       createdAt: {
         type: DataTypes.STRING,
         defaultValue: new Date(),
@@ -49,6 +50,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('notifications');
+    await queryInterface.dropTable('sections');
   }
 };
