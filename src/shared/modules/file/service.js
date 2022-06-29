@@ -3,7 +3,7 @@ const FileValidation = require('./validation');
 const File = require('./model');
 const Pagination = require('../../middlewares/pagination');
 const permissions = require('../../middlewares/permissions');
-const FileService = require('./aws-cloud-service');
+const FileAwsService = require('./aws-cloud-service');
 
 sequelize = db.sequelize;
 
@@ -51,7 +51,7 @@ const FileService = {
         const createFile = await File.create(body);
 
         if(body.storage == 'AWS'){
-          const uploadAws = FileService.uploadFile(path, originalname)
+          const uploadAws = FileAwsService.uploadFile(path, originalname)
         }
   
         return createFile;
