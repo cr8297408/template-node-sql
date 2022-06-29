@@ -10,7 +10,8 @@
     "desmigrate": "npx sequelize db:migrate:undo:all",
     "desmigrateOne": "npx sequelize db:migrate:undo --name",
     "seeders": "npx sequelize db:seed:all",
-    "deseeds": "npx sequelize db:seed:undo:all"
+    "deseeds": "npx sequelize db:seed:undo:all",
+    "createMigration": "npx sequelize migration:create --name"
   },
   "dependencies": {
     "aws-sdk": "^2.1158.0",

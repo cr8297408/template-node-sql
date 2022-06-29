@@ -28,7 +28,7 @@ const router = Router();
   * @swagger
   *  /v1/auth/signUp:
   *      post:
-  *          summary: login users
+  *          summary: sign up users
   *          security: [] # No security
   *          tags: ["Auths"]
   *          requestBody:
@@ -36,7 +36,7 @@ const router = Router();
   *              content:
   *                  application/json:
   *                      schema:
-  *                          $ref: '#/components/schemas/login'
+  *                          $ref: '#/components/schemas/Auth'
   *          responses:
   *              200:
   *                  description: login succesfully
@@ -128,7 +128,7 @@ const router = Router();
   *  description: endpoints for managing api Auths.
   * components:
   *  schemas:
-  *      Auths:
+  *      Auth:
   *          type: object
   *          required:
   *              -name
