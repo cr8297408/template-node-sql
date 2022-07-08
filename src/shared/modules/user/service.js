@@ -265,7 +265,7 @@ const UserService = {
       if (!user) {
         throw new Error('token invalido...')
       }
-      const avatar = await FileService.uploadFile(path, originalname); 
+      const avatar = await FileService.uploadFile(path, originalname);
       const userModif = await User.update({
         avatarFile: avatar
       }, {

@@ -7,6 +7,9 @@ var sequelize = new Sequelize(config.DB_NAME,
     {
         host: config.DB_HOST,
         dialect: 'mysql',
+        dialectOptions: {
+            charset: 'utf8mb4'
+        },
     }
 );
 

@@ -6,6 +6,9 @@ const ReportTypeComponent = require('../shared/modules/report-type');
 const FileComponent = require('../shared/modules/file');
 const SupportTicketComponent = require('../shared/modules/support-ticket');
 const TicketThreadComponent = require('../shared/modules/ticket-thread');
+const ChatComponent = require('../shared/modules/chat');
+const MessageComponent = require('../shared/modules/chat/message');
+const EjemploComponent = require('./ejemplo')
 
 module.exports = {
   UserComponent,
@@ -15,5 +18,8 @@ module.exports = {
   ReportTypeComponent,
   FileComponent,
   SupportTicketComponent,
-  TicketThreadComponent
+  TicketThreadComponent,
+  ChatComponent,
+  MessageComponent,
+  EjemploComponent
 }

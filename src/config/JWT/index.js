@@ -14,7 +14,8 @@ const expressJWT = jwt({
         '/v1/auth/signIn',
         '/v1/sockets',
         '/favicon.ico',
-        '/socket.io/socket.io.js'
+        '/socket.io/socket.io.js',
+        '/'
     ],
 });
 

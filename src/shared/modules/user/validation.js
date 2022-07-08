@@ -27,7 +27,6 @@ class UserValidation {
         profile: Joi.object(),
         isActive: Joi.boolean(),
         isAdmin: Joi.boolean(),
-        avatarFile: Joi.string(),
         typeUser: Joi.string()
       })
 

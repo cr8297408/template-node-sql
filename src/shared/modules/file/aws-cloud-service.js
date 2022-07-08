@@ -12,7 +12,7 @@ const FileService = {
           Body: bodyFile,
           ACL: 'public-read',//TODO 😎
       };
-      let uploadResult = s3.upload(paramsSnap, async function (err, data) {
+      s3.upload(paramsSnap, async function (err, data) {
         if (err) {
             throw new Error('error in callback',err)
         }
@@ -22,13 +22,10 @@ const FileService = {
           console.log('file deleted successfully');
         });
       });
-      const url = `${config.AWS_URL}/${originalname}`
+      const avatar = `${config.AWS_URL}/${originalname}`
+      
 
-      return {
-        url,
-        key: uploadResult.Key,
-        filename: originalname,
-      };
+      return avatar;
   },
 
   async drop(key){
