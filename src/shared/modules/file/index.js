@@ -12,7 +12,8 @@ async function findAll(req, res, next) {
 
 async function create(req, res, next){
   try {
-    const getFile = await FileService.create(req.headers['authorization'],req.body);
+    const {path, originalname} = req.file;
+    const getFile = await FileService.create(req.headers['authorization'],req.body, path, originalname);
     res.status(201).json(getFile)
   
   } catch (error) {

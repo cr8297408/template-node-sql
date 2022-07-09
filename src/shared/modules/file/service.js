@@ -40,7 +40,7 @@ const FileService = {
    * @param {*} body
    * @implements {File} model 
    */
-  async create(bearerHeader, body) {
+  async create(bearerHeader, body, path, originalname) {
     try {
       const validatePermission = await permissions(bearerHeader, 'CREATE')
       if (validatePermission) {
