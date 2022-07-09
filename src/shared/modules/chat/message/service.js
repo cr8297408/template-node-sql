@@ -3,6 +3,7 @@ const MessageValidation = require('./validation');
 const Message = require('./model');
 const Pagination = require('../../../middlewares/pagination')
 const permissions = require('../../../middlewares/permissions')
+const getUser = require('../../../middlewares/getUser')
 
 sequelize = db.sequelize;
 
@@ -40,9 +41,18 @@ const MessageService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, 'CREATE');
+      const user = await getUser(bearerHeader);
       if (validatePermission) {
-        const validate = MessageValidation.createMessage(body);
+        const validate = MessageValidation.createMessage({
+          ChatId: body.ChatId,
+          text: body.text,
+          emoticon: body.emoticon,
+          file: body.file,
+          tipeFile: body.tipeFile,
+          estate: body.estate,
+          createdBy: user.id
+        });
         if (validate.error) {
           throw new Error(validate.error)
         }
@@ -127,10 +137,15 @@ const MessageService = {
         if (validateBody.error) {
           throw new Error(validate.error)
         }
+        const user = await getUser(bearerHeader);
         const newMessage = await Message.update(
           {
-            name: body.name,
-            accountingAccount: body.accountingAccount 
+            text: body.text,
+            emoticon: body.emoticon,
+            file: body.file,
+            tipeFile: body.tipeFile,
+            estate: body.estate,
+            updatedBy: user.id
           },
           {where: {id}}
         )

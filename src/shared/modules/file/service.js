@@ -4,6 +4,7 @@ const File = require('./model');
 const Pagination = require('../../middlewares/pagination');
 const permissions = require('../../middlewares/permissions');
 const FileAwsService = require('./aws-cloud-service');
+const getUser = require('../../middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -47,8 +48,17 @@ const FileService = {
         if (validate.error) {
           throw new Error(validate.error)
         }
-
-        const createFile = await File.create(body);
+        const user = await getUser(bearerHeader);
+        const createFile = await File.create({
+          description: body.description,
+          filename: body.filename,
+          url: body.url,
+          key: body.key,
+          bytes: body.bytes,
+          storage: body.storage,
+          status: body.status,
+          createdBy: user.id
+        });
 
         if(body.storage == 'AWS'){
           const uploadAws = FileAwsService.uploadFile(path, originalname)
@@ -151,6 +161,7 @@ const FileService = {
             bytes: body.bytes,
             storage: body.storage,
             status: body.status,
+            updatedBy: user.id
           },
           {where: {id}}
         )

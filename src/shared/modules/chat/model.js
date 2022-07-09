@@ -23,6 +23,12 @@ const Chat = sequelize.define('Chat', {
   isPrivate: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: 'chats',

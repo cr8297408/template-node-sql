@@ -21,6 +21,12 @@ const TicketThread = sequelize.define('TicketThread', {
   estate: {
     type: DataTypes.ENUM('OPEN', 'CLOSED'),
     defaultValue: 'OPEN'
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: 'ticketThreads',

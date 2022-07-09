@@ -42,7 +42,7 @@ async function deleteOne(req, res, next){
 
 async function updateOne(req, res){
   try {
-    const Chat = await ChatService.update(req.headers['authorization'],req.params.id, req.body.users)
+    const Chat = await ChatService.update(req.headers['authorization'],req.params.id, req.body)
     res.json(Chat)
   } catch (error) {
     res.json(error.message)

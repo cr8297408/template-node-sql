@@ -16,7 +16,7 @@ class ChatValidation {
 
     createChat(body){
       const schema = Joi.object().keys({
-        name: Joi.string().required(),
+        name: Joi.string(),
         description: Joi.string(),
         users: Joi.object(),
         messages: Joi.object(),

@@ -70,6 +70,7 @@ const UserService = {
             message: 'el usuario ya está en uso '
           }
         }
+        const user = await getUser(bearerHeader);
   
         const createdUser = await User.create({
           email: body.email,
@@ -80,7 +81,8 @@ const UserService = {
           roles: body.roles,
           profile: body.profile,
           avatarFile: body.avatarFile,
-          typeUser: body.typeUser
+          typeUser: body.typeUser,
+          createdBy: user.id
         });
 
         let verificateUser = 'https://google.com'
@@ -215,6 +217,8 @@ const UserService = {
         if (validateBody.error) {
           throw new Error(validate.error)
         }
+
+        const user = await getUser(bearerHeader);
         const newUser = await User.update(
           {
             username: body.username,
@@ -226,6 +230,7 @@ const UserService = {
             isActive: body.isActive,
             isAdmin: body.isAdmin,
             avatarFile: body.avatarFile,
+            updatedBy: user.id
           },
           {where: {id}}
         )

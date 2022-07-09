@@ -3,6 +3,7 @@ const UserSectionValidation = require('./validation');
 const UserSection = require('./model');
 const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions')
+const getUser = require('../../middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -46,8 +47,12 @@ const UserSectionService = {
         if (validate.error) {
           throw new Error(validate.error)
         }
-  
-        const createUserSection = await UserSection.create(body);
+        const user = await getUser(bearerHeader);
+        const createUserSection = await UserSection.create({
+          name: body.name,
+          description: body.description, 
+          createdBy: user.id
+        });
         return createUserSection;
       } 
       return {
@@ -136,10 +141,12 @@ const UserSectionService = {
         if (validateBody.error) {
           throw new Error(validate.error)
         }
+        const user = await getUser(bearerHeader);
         const newUserSection = await UserSection.update(
           {
             name: body.name,
-            accountingAccount: body.accountingAccount 
+            description: body.description,
+            updatedBy: user.id 
           },
           {where: {id}}
         )

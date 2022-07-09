@@ -52,8 +52,16 @@ const TicketThreadService = {
         if (validate.error) {
           throw new Error(validate.error)
         }
-        const ticketT = await TicketThread.create(body)
+        
         const user = await getUser(bearerHeader);
+
+        const ticketT = await TicketThread.create({
+          response: body.response,
+          date: body.date,
+          estate: body.estate,
+          SupportTicketId: body.SupportTicketId,
+          createdBy: user.id
+        })
 
         const userManager = await SupportTicket.findByPk(body.SupportTicketId);
 
@@ -156,11 +164,15 @@ const TicketThreadService = {
         if (validateBody.error) {
           throw new Error(validate.error)
         }
+
+        const user = await getUser(bearerHeader);
+
         const newTicketThread = await TicketThread.update(
           {
             response: body.respose, 
             fecha: body.date,
             estate:body.estate,
+            updatedBy: user.id
           },
           {where: {id}}
         )

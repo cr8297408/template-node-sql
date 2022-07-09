@@ -33,6 +33,12 @@ const Event = sequelize.define('Event', {
   },
   estate: {
     type: DataTypes.ENUM('ACTIVE', 'INACTIVE') 
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: 'events',

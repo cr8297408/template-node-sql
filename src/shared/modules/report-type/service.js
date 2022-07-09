@@ -3,6 +3,7 @@ const ReportTypeValidation = require('./validation');
 const ReportType = require('./model');
 const Pagination = require('../../middlewares/pagination')
 const permissions = require('../../middlewares/permissions');
+const getUser = require('../../middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -46,8 +47,12 @@ const ReportTypeService = {
         if (validate.error) {
           throw new Error(validate.error)
         }
-  
-        const createReportType = await ReportType.create(body);
+        const user = await getUser(bearerHeader);
+        const createReportType = await ReportType.create({
+          name: body.name,
+          description: body.description,
+          createdBy: user.id
+        });
         return createReportType;
       } 
       return {
@@ -136,10 +141,12 @@ const ReportTypeService = {
         if (validateBody.error) {
           throw new Error(validate.error)
         }
+        const user = await getUser(bearerHeader);
         const newReportType = await ReportType.update(
           {
             name: body.name,
-            accountingAccount: body.accountingAccount 
+            description: body.description,
+            updatedBy: user.id
           },
           {where: {id}}
         )

@@ -45,6 +45,12 @@ module.exports = {
       updatedAt: {
         type: DataTypes.STRING,
         defaultValue: new Date(),
+      },
+      createdBy: {
+        type: DataTypes.STRING,
+      },
+      updatedBy: {
+        type: DataTypes.STRING,
       }
     });
   },

@@ -3,6 +3,7 @@ const NotificationValidation = require('./validation');
 const Notification = require('./model');
 const Pagination = require('../../../shared/middlewares/pagination');
 const permissions = require('../../../shared/middlewares/permissions');
+const getUser = require('../../middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -46,8 +47,13 @@ const NotificationService = {
         if (validate.error) {
           throw new Error(validate.error)
         }
-  
-        const createNotification = await Notification.create(body);
+        const user = await getUser(bearerHeader);
+        const createNotification = await Notification.create({
+          message: body.message,
+          type: body.type,
+          isRead: body.isRead,
+          createdBy: user.id
+        });
         return createNotification;
       } 
       return {

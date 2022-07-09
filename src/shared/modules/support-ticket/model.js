@@ -30,6 +30,12 @@ const SupportTicket = sequelize.define('SupportTicket', {
   priority: {
     type: DataTypes.ENUM('HIGH', 'MEDIUM', 'LOW'),
     defaultValue: 'LOW'
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: 'supportTickets',

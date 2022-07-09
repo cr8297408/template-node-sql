@@ -3,6 +3,7 @@ const ChatValidation = require('./validation');
 const Chat = require('./model');
 const Message = require('./message/model');
 const permissions = require('../../middlewares/permissions');
+const getUser = require('../../middlewares/getUser');
 
 const io = require('../../../config/socket.io');
 
@@ -48,8 +49,15 @@ const ChatService = {
         if (validate.error) {
           throw new Error(validate.error)
         }
-  
-        const createChat = await Chat.create(body);
+        const user = await getUser(bearerHeader);
+        const createChat = await Chat.create({
+          name: body.name,
+          description: body.description,
+          users: body.users,
+          messages: body.messages,
+          isPrivate: body.isPrivate,
+          createdBy: user.id
+        });
         // io.emit('new-room', body)
         return createChat;
       } 
@@ -135,20 +143,30 @@ const ChatService = {
         const validateid = await ChatValidation.getChat(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          throw new Error(validateid.error)
         }
   
-        const validateBody = await ChatValidation.createChat(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
+        // const validateBody = await ChatValidation.createChat(body)
+        // if (validateBody.error) {
+        //   throw new Error(validateBody.error)
+        // }
+        const user = await getUser(bearerHeader);
+        console.log({
+          name: body.name,
+          description: body.description,
+          users: body.users,
+          messages: body.messages,
+          isPrivate: body.isPrivate,
+          updatedBy: user.id
+        },);
         const newChat = await Chat.update(
           {
             name: body.name,
             description: body.description,
             users: body.users,
             messages: body.messages,
-            isPrivate: body.isPrivate
+            isPrivate: body.isPrivate,
+            updatedBy: user.id
           },
           {where: {id}}
         )

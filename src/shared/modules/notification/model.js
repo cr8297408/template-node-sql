@@ -30,6 +30,12 @@ const Notification = sequelize.define('Notification', {
     type: DataTypes.STRING,
   },
   module: DataTypes.STRING,
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
+  }
 },{
   tableName: "notifications",
   timestamps: true

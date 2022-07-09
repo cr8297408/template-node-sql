@@ -3,6 +3,7 @@ const SupportTicketValidation = require('./validation');
 const SupportTicket = require('./model');
 const Pagination = require('../../middlewares/pagination')
 const permissions = require('../../middlewares/permissions')
+const getUser = require('../../middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -46,8 +47,18 @@ const SupportTicketService = {
         if (validate.error) {
           throw new Error(validate.error)
         }
-  
-        const createSupportTicket = await SupportTicket.create(body);
+        
+        const user = await getUser(bearerHeader);
+        const createSupportTicket = await SupportTicket.create({
+          title: body.title,
+          subject: body.subject,
+          reason: body.reason,
+          estate: body.estate,
+          priority: body.priority,
+          TypeTicketId: body.TypeTicketId,
+          UserId: body.UserId,
+          createdBy: user.id
+        });
         return createSupportTicket;
       } 
       return {
@@ -136,10 +147,15 @@ const SupportTicketService = {
         if (validateBody.error) {
           throw new Error(validate.error)
         }
+        const user = await getUser(bearerHeader);
         const newSupportTicket = await SupportTicket.update(
           {
-            name: body.name,
-            accountingAccount: body.accountingAccount 
+            title: body.title,
+            subject: body.subject,
+            reason: body.reason,
+            estate: body.estate,
+            priority: body.priority,
+            updatedBy: user.id
           },
           {where: {id}}
         )

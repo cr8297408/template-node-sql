@@ -30,6 +30,12 @@ const UserSection = sequelize.define('UserSection', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
+  }
 },{
   tableName: 'userSections',
   timestamps: true

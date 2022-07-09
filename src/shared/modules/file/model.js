@@ -34,6 +34,12 @@ const File = sequelize.define('File', {
   description: {
     type: DataTypes.STRING,
   },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
+  }
 },{
   tableName: 'files',
   timestamps: true

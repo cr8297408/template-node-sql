@@ -5,6 +5,7 @@ const Pagination = require('../../middlewares/pagination');
 const permissions = require('../../middlewares/permissions');
 const EventUser = require('./eventsUser.model');
 const User = require('../user/model');
+const getUser = require('../../middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -48,8 +49,17 @@ const EventService = {
         if (validate.error) {
           throw new Error(validate.error)
         }
-  
-        const createEvent = await Event.create(body);
+        const user = await getUser(bearerHeader);
+        const createEvent = await Event.create({
+          icon: body.icon,
+          subtitle: body.subtitle,
+          title: body.title,
+          finishDate: body.finishDate,
+          initDate: body.initDate,
+          description: body.description,
+          estate: body.estate,
+          createdBy: user.id
+        });
         return createEvent;
       } 
       return {
@@ -138,6 +148,7 @@ const EventService = {
         if (validateBody.error) {
           throw new Error(validate.error)
         }
+        const user = await getUser(bearerHeader);
         const newEvent = await Event.update(
           {
             icon: body.icon,
@@ -146,7 +157,8 @@ const EventService = {
             finishDate: body.finishDate,
             initDate: body.initDate,
             description: body.description,
-            estate: body.estate  
+            estate: body.estate,
+            updatedBy: user.id
           },
           {where: {id}}
         )

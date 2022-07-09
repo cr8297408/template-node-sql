@@ -23,6 +23,12 @@ const Message = sequelize.define('Message', {
   },
   estate: {
     type: DataTypes.ENUM('LEIDO', 'ENTREGADO', 'PENDIENTE'),
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: 'messages',
